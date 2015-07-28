@@ -26,7 +26,7 @@ import net.rdrei.android.viewpagerindicator.UnderlinePageIndicator;
 
 
 public class MainActivity extends Activity {
-    IMyAidlInterface iMyAidlInterface;
+    IMyAidlInterface iMyAidlInterface, iMyAidlInterface2, iMyAidlInterface3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +73,13 @@ public class MainActivity extends Activity {
                         viewPager.getHitRect(woot);
                         v.getLocalVisibleRect(woot);
                         try {
-                            iMyAidlInterface.propertiesChanged(position, blah[0], blah[1], v.getWidth(), v.getHeight(), v.getLocalVisibleRect(woot));
+                            IMyAidlInterface myAidlInterface = iMyAidlInterface;
+                            if (position == 1) {
+                                myAidlInterface = iMyAidlInterface2;
+                            } else if (position == 2) {
+                                myAidlInterface = iMyAidlInterface3;
+                            }
+                            myAidlInterface.propertiesChanged(position, blah[0], blah[1], v.getWidth(), v.getHeight(), v.getLocalVisibleRect(woot));
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
@@ -99,6 +105,38 @@ public class MainActivity extends Activity {
             public void onServiceDisconnected(ComponentName name) {
                 try {
                     iMyAidlInterface.onPause();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, Context.BIND_AUTO_CREATE);
+        i.setClassName("com.example.danesh.surfaceservice", "com.example.danesh.surfaceservice.MyService2");
+        bindService(i, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                iMyAidlInterface2 = IMyAidlInterface.Stub.asInterface(service);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                try {
+                    iMyAidlInterface2.onPause();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, Context.BIND_AUTO_CREATE);
+        i.setClassName("com.example.danesh.surfaceservice", "com.example.danesh.surfaceservice.MyService3");
+        bindService(i, new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                iMyAidlInterface3 = IMyAidlInterface.Stub.asInterface(service);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                try {
+                    iMyAidlInterface3.onPause();
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }

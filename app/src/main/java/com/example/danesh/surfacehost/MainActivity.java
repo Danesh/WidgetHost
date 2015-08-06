@@ -71,7 +71,6 @@ public class MainActivity extends Activity {
                         v.getLocationOnScreen(blah);
                         Rect woot = new Rect();
                         viewPager.getHitRect(woot);
-                        v.getLocalVisibleRect(woot);
                         try {
                             IMyAidlInterface myAidlInterface = iMyAidlInterface;
                             if (position == 1) {
@@ -150,11 +149,13 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (iMyAidlInterface != null) {
-            try {
-                iMyAidlInterface.onPause();
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        for (IMyAidlInterface aidlInterface : new IMyAidlInterface[] {iMyAidlInterface, iMyAidlInterface2, iMyAidlInterface3}) {
+            if (aidlInterface != null) {
+                try {
+                    aidlInterface.onPause();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -162,11 +163,14 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (iMyAidlInterface != null) {
-            try {
-                iMyAidlInterface.onResume();
-            } catch (RemoteException e) {
-                e.printStackTrace();
+
+        for (IMyAidlInterface aidlInterface : new IMyAidlInterface[] {iMyAidlInterface, iMyAidlInterface2, iMyAidlInterface3}) {
+            if (aidlInterface != null) {
+                try {
+                    aidlInterface.onResume();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -174,11 +178,13 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (iMyAidlInterface != null) {
-            try {
-                iMyAidlInterface.onPause();
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        for (IMyAidlInterface aidlInterface : new IMyAidlInterface[] {iMyAidlInterface, iMyAidlInterface2, iMyAidlInterface3}) {
+            if (aidlInterface != null) {
+                try {
+                    aidlInterface.onPause();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
